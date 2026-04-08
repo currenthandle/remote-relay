@@ -7,10 +7,11 @@
     "start": "bun run src/main.ts",
     "client": "bun run src/client.ts",
     "watch": "bun run src/watch.ts",
-    "host": "bun run src/main.ts & bun run src/watch.ts"
+    "host": "concurrently \"bun run src/main.ts\" \"bun run src/watch.ts\""
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "concurrently": "^9.2.1"
   },
   "peerDependencies": {
     "typescript": "^5"
