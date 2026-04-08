@@ -6,7 +6,8 @@
   "scripts": {
     "start": "bun run src/main.ts",
     "client": "bun run src/client.ts",
-    "watch": "bun run src/watch.ts"
+    "watch": "bun run src/watch.ts",
+    "host": "bun run src/main.ts & bun run src/watch.ts"
   },
   "devDependencies": {
     "@types/bun": "latest"
