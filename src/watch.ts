@@ -4,7 +4,7 @@ import { join, basename } from "node:path"
 import { lookup } from "node:dns"
 
 const RELAY_URL = process.env.RELAY_URL ?? "http://localhost:8877"
-const WATCH_DIR = process.argv[2] ?? join(process.env.HOME ?? "/tmp", "share")
+const WATCH_DIR = process.argv[2] ?? process.env.WATCH_DIR ?? join(process.env.HOME ?? "/tmp", "share")
 
 console.log(`Watching ${WATCH_DIR}`)
 console.log(`Pushing to ${RELAY_URL}/push`)
