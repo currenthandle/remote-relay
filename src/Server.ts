@@ -3,7 +3,7 @@ import {
   HttpServerRequest,
   HttpServerResponse,
 } from "@effect/platform"
-import { Effect, Stream, PubSub } from "effect"
+import { Effect, PubSub, Stream } from "effect"
 import { Relay, type RelayEvent } from "./Relay.js"
 import { AudioPlayer } from "./AudioPlayer.js"
 
@@ -16,9 +16,8 @@ const encodeSSE = (event: RelayEvent): Uint8Array => {
 
 const sseHandler = Effect.gen(function* () {
   const { pubsub } = yield* Relay
-  const sub = yield* PubSub.subscribe(pubsub)
 
-  const stream = Stream.fromQueue(sub).pipe(Stream.map(encodeSSE))
+  const stream = Stream.fromPubSub(pubsub).pipe(Stream.map(encodeSSE))
 
   return HttpServerResponse.stream(stream, {
     contentType: "text/event-stream",
