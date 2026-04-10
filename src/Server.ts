@@ -3,7 +3,7 @@ import {
   HttpServerRequest,
   HttpServerResponse,
 } from "@effect/platform"
-import { Effect, PubSub, Stream } from "effect"
+import { Effect, PubSub, Schedule, Stream } from "effect"
 import { Relay, type RelayEvent } from "./Relay.js"
 import { AudioPlayer } from "./AudioPlayer.js"
 
@@ -17,7 +17,14 @@ const encodeSSE = (event: RelayEvent): Uint8Array => {
 const sseHandler = Effect.gen(function* () {
   const { pubsub } = yield* Relay
 
-  const stream = Stream.fromPubSub(pubsub).pipe(Stream.map(encodeSSE))
+  const keepalive = encoder.encode(": keepalive\n\n")
+  const stream = Stream.merge(
+    Stream.concat(
+      Stream.make(keepalive),
+      Stream.fromSchedule(Schedule.spaced("30 seconds")).pipe(Stream.map(() => keepalive))
+    ),
+    Stream.fromPubSub(pubsub).pipe(Stream.map(encodeSSE))
+  )
 
   return HttpServerResponse.stream(stream, {
     contentType: "text/event-stream",
