@@ -38,9 +38,8 @@ const sseHandler = Effect.gen(function* () {
 
 const audioHandler = Effect.gen(function* () {
   const req = yield* HttpServerRequest.HttpServerRequest
-  const body = yield* req.arrayBuffer
   const player = yield* AudioPlayer
-  yield* player.play(new Uint8Array(body))
+  yield* player.play(req.stream)
   return yield* HttpServerResponse.json({ ok: true })
 })
 
